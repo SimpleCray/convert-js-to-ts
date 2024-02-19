@@ -1,0 +1,14 @@
+name: 'develop'
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    uses: zelibot/devops-github/.github/workflows/node-spa_deploy_dev.yaml@main
+    with:
+      spa-s3-bucket: zelibot.xyz
+      node-version: lts/hydrogen
+    secrets: inherit

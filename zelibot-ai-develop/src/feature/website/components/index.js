@@ -1,0 +1,9 @@
+export { default as Hero } from './hero';
+export { default as Section } from './section';
+export { default as TextBorder } from './text-border';
+export { default as AnimatedBorder } from './animated-border';
+export { default as CTASection } from './cta-section';
+export { default as OutlinedHeading } from './outlined-heading';
+export { default as VerifyForm } from './verify-form';
+export { default as SelectZeliForm } from './select-zeli-form';
+export { default as RegisterForm } from './register-form';

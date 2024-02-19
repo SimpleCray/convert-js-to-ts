@@ -1,0 +1,69 @@
+image: node:latest
+
+cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+        - node_modules/
+
+stages:
+    - build
+    - deploy
+
+Staging:
+    stage: build
+    script:
+        - mv next.config.js swapfile.next.config.js
+        - mv staging.next.config.js next.config.js
+        - yarn install
+        - yarn upgrade
+        - yarn export
+        - mv next.config.js staging.next.config.js
+        - mv swapfile.next.config.js next.config.js
+    artifacts:
+        paths:
+            - _static
+        expire_in: 20 minutes
+    rules:
+        - if: '$CI_COMMIT_BRANCH == "release"'
+
+PRODUCTION Build:
+    stage: build
+    script:
+        - mv next.config.js swapfile.next.config.js
+        - mv prod.next.config.js next.config.js
+        - yarn install
+        - yarn export
+        - mv next.config.js prod.next.config.js
+        - mv swapfile.next.config.js next.config.js
+    artifacts:
+        paths:
+            - _static
+        expire_in: 20 minutes
+    rules:
+        - if: '$CI_COMMIT_BRANCH == "main"'
+
+Staging Deploy:
+    stage: deploy
+    before_script:
+        - apt-get update -y
+        - apt-get install -y awscli
+    script:
+        - aws configure set aws_access_key_id $STAGE_AWS_ACCESS_KEY_ID
+        - aws configure set aws_secret_access_key $STAGE_AWS_SECRET_ACCESS_KEY
+        - aws configure set region $STAGE_AWS_DEFAULT_REGION
+        - aws s3 sync ./_static s3://zelibot.ai.staging
+    rules:
+        - if: '$CI_COMMIT_BRANCH == "release"'
+
+PRODUCTION Deploy:
+  stage: deploy
+  before_script:
+    - apt-get update -y
+    - apt-get install -y awscli
+  script:
+    - aws configure set aws_access_key_id $PROD_AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $PROD_AWS_SECRET_ACCESS_KEY
+    - aws configure set region $PROD_AWS_DEFAULT_REGION
+    - aws s3 sync ./_static s3://zelibot.ai
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'

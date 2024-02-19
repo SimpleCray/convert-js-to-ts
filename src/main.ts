@@ -136,8 +136,8 @@ async function run(args: {
 
 run({
   typePackagesToAvoid: ["@types/yup"],
-  projectAbsolutePath: path.resolve('test-targets/simple'),
-  isNode: false,
+  projectAbsolutePath: path.resolve('F:\Source\Zeligate\zelibot-ai'),
+  isNode: true,
   directoriesToConvert: undefined,
   tsConfig: {
     include: ["src"],

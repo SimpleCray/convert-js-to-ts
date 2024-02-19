@@ -1,0 +1,14 @@
+name: 'main'
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    uses: zelibot/devops-github/.github/workflows/node-spa_deploy_prod.yaml@main
+    with:
+      spa-s3-bucket: zeligate.ai
+      node-version: lts/hydrogen
+    secrets: inherit

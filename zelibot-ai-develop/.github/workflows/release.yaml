@@ -1,0 +1,14 @@
+name: 'release'
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  deploy:
+    uses: zelibot/devops-github/.github/workflows/node-spa_deploy_staging.yaml@main
+    with:
+      spa-s3-bucket: zelibot.ai.staging
+      node-version: lts/hydrogen
+    secrets: inherit
